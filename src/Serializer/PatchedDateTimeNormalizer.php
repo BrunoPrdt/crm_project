@@ -28,17 +28,27 @@ class PatchedDateTimeNormalizer implements NormalizerInterface, DenormalizerInte
     const FORMAT_KEY = 'datetime_format';
     const TIMEZONE_KEY = 'datetime_timezone';
 
+    /**
+     * @var array
+     */
     private $defaultContext = [
         self::FORMAT_KEY => \DateTime::RFC3339,
         self::TIMEZONE_KEY => null,
     ];
 
+    /**
+     * @var array
+     */
     private static $supportedTypes = [
         \DateTimeInterface::class => true,
         \DateTimeImmutable::class => true,
         \DateTime::class => true,
     ];
 
+    /**
+     * PatchedDateTimeNormalizer constructor.
+     * @param array $defaultContext
+     */
     public function __construct(array $defaultContext = [])
     {
         $this->defaultContext = array_merge($this->defaultContext, $defaultContext);

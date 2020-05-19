@@ -76,10 +76,9 @@ class Invoice
     private $customer;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      * @Groups({"invoices_read", "customers_read", "invoices_subresource"})     *
      * @Assert\NotBlank(message="Il faut absoluement un chrono pour la facture")
-     * @Assert\Type(type="integer", message="Le chrono doit être un nombre")
      */
     private $chrono;
 
@@ -145,7 +144,7 @@ class Invoice
         return $this;
     }
 
-    public function getChrono(): ?int
+    public function getChrono(): ?string
     {
         return $this->chrono;
     }
