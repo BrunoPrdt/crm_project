@@ -4,6 +4,7 @@ namespace App\Events;
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Invoice;
 use App\Repository\InvoiceRepository;
+use Exception;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -48,6 +49,7 @@ class InvoiceChronoSubscriber implements EventSubscriberInterface {
 
     /**
      * @param ViewEvent $event
+     * @throws Exception
      */
     public function setChronoForInvoice(ViewEvent $event)
     {
