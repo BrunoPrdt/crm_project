@@ -48,7 +48,6 @@ class CustomerUserSubscriber implements EventSubscriberInterface {
             $customer = $result;
             $user = $this->security->getUser();
             $customer->setUser($user);
-            dd($customer);
         }
     }
 }

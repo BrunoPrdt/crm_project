@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom'
-import {HashRouter} from 'react-router-dom';
-import {Switch, Route} from 'react-router'
+import {HashRouter, Switch, Route} from 'react-router-dom';
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
@@ -22,7 +21,7 @@ function App() {
             <Navbar/>
             <main className="container pt-5">
                 <Switch>
-                    <Route path="/" component={HomePage}/>
+                    <Route path="/" exact component={HomePage}/>
                     <Route path="/clients" component={CustomersPage}/>
                     <Route path="/factures" component={InvoicesPage}/>
                     <Route path="" component={NotFound} />
