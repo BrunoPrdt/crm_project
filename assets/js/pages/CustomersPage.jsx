@@ -1,9 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
+import Pagination from "../components/Pagination";
 
+/**
+ *
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 const CustomersPage = (props) => {
 
     const [customers, setCustomers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect( () => {
        axios.get('http://127.0.0.1:8000/api/customers')
@@ -13,6 +21,10 @@ const CustomersPage = (props) => {
        ;
     }, []);
 
+    /**
+     *
+     * @param id
+     */
     function handleDelete(id) {
         const originalCustomers = [...customers];
 
@@ -28,8 +40,12 @@ const CustomersPage = (props) => {
             });
     }
 
+    /**
+     *
+     * @returns {*}
+     */
     function renderTable() {
-        return customers.map((customer, index) => {
+        return paginationTable.map((customer, index) => {
             return(
                 <tr key={index}>
                     <td>{customer.id}</td>
@@ -56,6 +72,18 @@ const CustomersPage = (props) => {
         })
     }
 
+    /**
+     *
+     * @param page
+     */
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const itemsPerPage = 10;
+
+    const paginationTable = Pagination.getData(customers, currentPage, itemsPerPage);
+
     return (
         <div>
             <h1>Liste des clients</h1>
@@ -76,6 +104,12 @@ const CustomersPage = (props) => {
                 {renderTable()}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                length={customers.length}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 };
