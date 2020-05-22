@@ -11,6 +11,7 @@ const CustomersPage = () => {
 
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
     useEffect( () => {
        axios.get('http://127.0.0.1:8000/api/customers')
@@ -79,13 +80,33 @@ const CustomersPage = () => {
         setCurrentPage(page);
     };
 
+    const handleSearch = (e) => {
+        setSearch(e.currentTarget.value);
+        setCurrentPage(1);
+    };
+    //to filter !
+    const filteredCustomers = customers.filter(c => (c.firstName.toLowerCase().includes(search)) ||
+        (c.lastName.toLowerCase().includes(search)) ||
+        (c.email.toLowerCase().includes(search)) ||
+        (c.compagny.toLowerCase().includes(search)));
+
     const itemsPerPage = 10;
-    const paginationTable = Pagination.getData(customers, currentPage, itemsPerPage);
+    const paginationTable = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
     return (
         <div>
             <h1>Liste des clients</h1>
 
+            <div className="form-group">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Rechercher ..."
+                    onChange={handleSearch}
+                    value={search}
+                />
+            </div>
+            
             <table className="table table-hover">
                 <thead>
                     <tr>
@@ -107,12 +128,14 @@ const CustomersPage = () => {
                 {renderTable()}
                 </tbody>
             </table>
-            <Pagination
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                length={customers.length}
-                onPageChange={handlePageChange}
-            />
+            {filteredCustomers.length > itemsPerPage && (
+                <Pagination
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    length={filteredCustomers.length}
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 };
