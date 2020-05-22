@@ -1,6 +1,11 @@
 import React from 'react';
 
-const Navbar = (props) => {
+/**
+ *
+ * @returns {*}
+ * @constructor
+ */
+const Navbar = () => {
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">

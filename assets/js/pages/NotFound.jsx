@@ -7,6 +7,11 @@
 
 import React from 'react';
 
+/**
+ *
+ * @returns {*}
+ * @constructor
+ */
 export default function NotFound() {
     return (
         <article>

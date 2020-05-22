@@ -1,6 +1,11 @@
 import React from 'react';
 
-const InvoicesPage = (props) => {
+/**
+ *
+ * @returns {*}
+ * @constructor
+ */
+const InvoicesPage = () => {
     return (
         <div>
             <h1>Liste des factures</h1>
