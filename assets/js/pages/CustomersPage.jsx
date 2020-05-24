@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
 
 /**
@@ -13,35 +13,39 @@ const CustomersPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
 
-    useEffect( () => {
-       axios.get('http://127.0.0.1:8000/api/customers')
-            .then(response => response.data['hydra:member'])
-           .then(newData => setCustomers(newData))
-           .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
-       ;
-    }, []);
+    /**
+     * Permet d'aller récupérer les customers
+     * @returns {Promise<void>}
+     */
+    const fetchCustomers = async () => {
+        try {
+            const data = await findAllCustomers();
+            setCustomers(data);
+        } catch (error) {
+            console.log("Oups il semble qu'il y ait une erreur: ", error.response);
+        }
+    };
+    /**
+     * On va chercher les customers au chargement du composant
+     */
+    useEffect(  () => fetchCustomers(), []);
 
     /**
-     *
+     * Gestion de la suppression d'un customer
      * @param id
      */
-    function handleDelete(id) {
+    async function handleDelete(id) {
         const originalCustomers = [...customers];
-
         setCustomers(customers.filter(customer => customer.id !== id));
-
-        axios
-            .delete(`http://127.0.0.1:8000/api/customers/${id}`)
-            .then(() => console.log("suppression ok")
-        )
-            .catch(error => {
-                setCustomers(originalCustomers);
-                console.log('echec de la suppression :', error.response);
-            });
+        try {
+            await deleteCustomer(id)
+        } catch (error) {
+            setCustomers(originalCustomers);
+        }
     }
 
     /**
-     *
+     * Gestion du rendu du tableau
      * @returns {*}
      */
     function renderTable() {
@@ -73,18 +77,20 @@ const CustomersPage = () => {
     }
 
     /**
-     *
+     * Gestion du changement de page
      * @param page
      */
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
+    const handlePageChange = (page) => setCurrentPage(page);
 
+    /**
+     * Gestion de la recherche
+     * @param e
+     */
     const handleSearch = (e) => {
         setSearch(e.currentTarget.value);
         setCurrentPage(1);
     };
-    //to filter !
+    // filtrage des customers en fonction de la recherche
     const filteredCustomers = customers.filter(c => (c.firstName.toLowerCase().includes(search)) ||
         (c.lastName.toLowerCase().includes(search)) ||
         (c.email.toLowerCase().includes(search)) ||
