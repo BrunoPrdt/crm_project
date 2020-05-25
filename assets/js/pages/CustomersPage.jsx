@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
+import axios from "axios";
 
 /**
  *
@@ -13,35 +14,29 @@ const CustomersPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
 
-    /**
-     * Permet d'aller récupérer les customers
-     * @returns {Promise<void>}
-     */
-    const fetchCustomers = async () => {
-        try {
-            const data = await findAllCustomers();
-            setCustomers(data);
-        } catch (error) {
-            console.log("Oups il semble qu'il y ait une erreur: ", error.response);
-        }
-    };
-    /**
-     * On va chercher les customers au chargement du composant
-     */
-    useEffect(  () => fetchCustomers(), []);
+    useEffect( () => {
+        axios.get('http://127.0.0.1:8000/api/customers')
+            .then(response => response.data['hydra:member'])
+            .then(newData => setCustomers(newData))
+            .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
+        ;
+    }, []);
 
     /**
-     * Gestion de la suppression d'un customer
+     *
      * @param id
      */
-    async function handleDelete(id) {
+    function handleDelete(id) {
         const originalCustomers = [...customers];
         setCustomers(customers.filter(customer => customer.id !== id));
-        try {
-            await deleteCustomer(id)
-        } catch (error) {
-            setCustomers(originalCustomers);
-        }
+        axios
+            .delete(`http://127.0.0.1:8000/api/customers/${id}`)
+            .then(() => console.log("suppression ok")
+            )
+            .catch(error => {
+                setCustomers(originalCustomers);
+                console.log('echec de la suppression :', error.response);
+            });
     }
 
     /**
