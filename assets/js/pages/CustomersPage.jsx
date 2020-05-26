@@ -16,7 +16,6 @@ class CustomersPagesBis extends Component {
         findAllCustomers()
             .then(newData => this.setState({customers: newData}))
             .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
-
     }
 
     render() {
