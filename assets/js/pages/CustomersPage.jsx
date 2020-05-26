@@ -1,115 +1,111 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component} from 'react';
 import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
-import axios from "axios";
 
-/**
- *
- * @returns {*}
- * @constructor
- */
-const CustomersPage = () => {
+class CustomersPagesBis extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            customers: [],
+            currentPage: 1,
+            search: "",
+        }
+    }
 
-    const [customers, setCustomers] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
-
-    useEffect( () => {
-        axios.get('http://127.0.0.1:8000/api/customers')
-            .then(response => response.data['hydra:member'])
-            .then(newData => setCustomers(newData))
+    componentDidMount() {
+        findAllCustomers()
+            .then(newData => this.setState({customers: newData}))
             .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
-        ;
-    }, []);
 
-    /**
-     *
-     * @param id
-     */
-    function handleDelete(id) {
-        const originalCustomers = [...customers];
-        setCustomers(customers.filter(customer => customer.id !== id));
-        axios
-            .delete(`http://127.0.0.1:8000/api/customers/${id}`)
-            .then(() => console.log("suppression ok")
-            )
-            .catch(error => {
-                setCustomers(originalCustomers);
-                console.log('echec de la suppression :', error.response);
-            });
     }
 
-    /**
-     * Gestion du rendu du tableau
-     * @returns {*}
-     */
-    function renderTable() {
-        return paginationTable.map((customer, index) => {
-            return(
-                <tr key={index}>
-                    <td>{customer.id}</td>
-                    <td>
-                        <a href="#">{customer.firstName} {customer.lastName}</a>
-                    </td>
-                    <td>{customer.email}</td>
-                    <td>{customer.compagny}</td>
-                    <td className="text-center">
-                        <span className="badge badge-light">{customer.invoices.length}</span>
-                    </td>
-                    <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
-                    <td>
-                        <button
-                            disabled={customer.invoices.length > 0}
-                            className="btn btn-sm btn-danger"
-                            onClick={() => handleDelete(customer.id)}
-                        >
-                            Supprimer
-                        </button>
-                    </td>
-                </tr>
-            )
-        })
-    }
+    render() {
+        /**
+         * Gestion du changement de page
+         * @param page
+         */
+        const handlePageChange = (page) => this.setState({currentPage: page});
 
-    /**
-     * Gestion du changement de page
-     * @param page
-     */
-    const handlePageChange = (page) => setCurrentPage(page);
+        /**
+         * Gestion de la recherche
+         * @param e
+         */
+        const handleSearch = (e) => {
+            this.setState({search: e.currentTarget.value});
+            this.setState({currentPage: 1});
+        };
 
-    /**
-     * Gestion de la recherche
-     * @param e
-     */
-    const handleSearch = (e) => {
-        setSearch(e.currentTarget.value);
-        setCurrentPage(1);
-    };
-    // filtrage des customers en fonction de la recherche
-    const filteredCustomers = customers.filter(c => (c.firstName.toLowerCase().includes(search)) ||
-        (c.lastName.toLowerCase().includes(search)) ||
-        (c.email.toLowerCase().includes(search)) ||
-        (c.compagny.toLowerCase().includes(search)));
+        /**
+         *
+         * @param id
+         */
+        const handleDelete = async (id) => {
+            const originalCustomers = [...this.state.customers];
+            this.setState({customers: this.state.customers.filter(customer => customer.id !== id)});
+            try {
+                await deleteCustomer(id)
+            }catch (error) {
+                this.setState({customers: originalCustomers});
+            }
+        };
 
-    const itemsPerPage = 10;
-    const paginationTable = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
+        // filtrage des customers en fonction de la recherche
+        const filteredCustomers = this.state.customers.filter(c => (c.firstName.toLowerCase().includes(this.state.search)) ||
+            (c.lastName.toLowerCase().includes(this.state.search)) ||
+            (c.email.toLowerCase().includes(this.state.search)) ||
+            (c.compagny.toLowerCase().includes(this.state.search)));
 
-    return (
-        <div>
-            <h1>Liste des clients</h1>
+        const itemsPerPage = 10;
+        const paginationTable = Pagination.getData(filteredCustomers, this.state.currentPage, itemsPerPage);
 
-            <div className="form-group">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Rechercher ..."
-                    onChange={handleSearch}
-                    value={search}
-                />
-            </div>
-            
-            <table className="table table-hover">
-                <thead>
+        /**
+         * Gestion du rendu du tableau
+         * @returns {*}
+         */
+        function renderTable() {
+            return paginationTable.map((customer, index) => {
+                return(
+                    <tr key={index}>
+                        <td>{customer.id}</td>
+                        <td>
+                            <a href="#">{customer.firstName} {customer.lastName}</a>
+                        </td>
+                        <td>{customer.email}</td>
+                        <td>{customer.compagny}</td>
+                        <td className="text-center">
+                            <span className="badge badge-light">{customer.invoices.length}</span>
+                        </td>
+                        <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
+                        <td>
+                            <button
+                                disabled={customer.invoices.length > 0}
+                                className="btn btn-sm btn-danger"
+                                onClick={() => handleDelete(customer.id)}
+                            >
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                )
+            })
+        }
+
+        return (
+            <div>
+                <h1>Liste des clients</h1>
+
+                <div className="form-group">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Rechercher ..."
+                        onChange={handleSearch}
+                        value={this.state.search}
+                    />
+                </div>
+
+                <table className="table table-hover">
+                    <thead>
                     <tr>
                         <th>Id.</th>
                         <th>Client</th>
@@ -119,26 +115,27 @@ const CustomersPage = () => {
                         <th className="text-center">Montant total</th>
                         <th />
                     </tr>
-                </thead>
-                <tbody>
-                {customers.length === 0 && (
-                    <tr>
-                        <td>Récupération des données ...</td>
-                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.state.customers.length === 0 && (
+                        <tr>
+                            <td>Récupération des données ...</td>
+                        </tr>
+                    )}
+                    {renderTable()}
+                    </tbody>
+                </table>
+                {filteredCustomers.length > itemsPerPage && (
+                    <Pagination
+                        currentPage={this.state.currentPage}
+                        itemsPerPage={itemsPerPage}
+                        length={filteredCustomers.length}
+                        onPageChange={handlePageChange}
+                    />
                 )}
-                {renderTable()}
-                </tbody>
-            </table>
-            {filteredCustomers.length > itemsPerPage && (
-                <Pagination
-                    currentPage={currentPage}
-                    itemsPerPage={itemsPerPage}
-                    length={filteredCustomers.length}
-                    onPageChange={handlePageChange}
-                />
-            )}
-        </div>
-    );
-};
+            </div>
+        );
+    }
+}
 
-export default CustomersPage;
+export default CustomersPagesBis;
