@@ -61,7 +61,7 @@ function InvoicesPagesBis() {
         return paginationTable.map((invoice, index) => {
             return(
                 <tr key={index}>
-                    <td>{invoice.id}</td>
+                    <td>{invoice.chrono}</td>
                     <td>{invoice.customer.firstName} {invoice.customer.lastName}</td>
                     <td>{invoice.customer.compagny}</td>
                     <td className="text-center">
@@ -69,7 +69,6 @@ function InvoicesPagesBis() {
                     </td>
                     <td>{invoice.sentAT}</td>
                     <td>{invoice.status}</td>
-                    <td>{invoice.chrono}</td>
                     <td>
                         <button
                             disabled={invoices.length > 0}
@@ -101,13 +100,12 @@ function InvoicesPagesBis() {
             <table className="table table-hover">
                 <thead>
                 <tr>
-                    <th>Id.</th>
+                    <th className="text-center">Numéro de facture</th>
                     <th>Client</th>
                     <th>Entreprise</th>
                     <th className="text-center">Montant</th>
                     <th>Envoyée le</th>
                     <th >Status</th>
-                    <th className="text-center">Numéro de facture</th>
                     <th />
                 </tr>
                 </thead>
