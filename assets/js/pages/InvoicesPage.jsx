@@ -68,7 +68,11 @@ function InvoicesPagesBis() {
                         <a href="#">{invoice.amount.toLocaleString()} €</a>
                     </td>
                     <td>{invoice.sentAT}</td>
-                    <td>{invoice.status}</td>
+                    <td>
+                        { invoice.status === "PAID" && <td>{invoice.status}</td> }
+                        { invoice.status === "SENT" && <td>{invoice.status}</td> }
+                        { invoice.status === "CANCELLED" && <td>{invoice.status}</td> }
+                    </td>
                     <td>
                         <button
                             disabled={invoices.length > 0}
