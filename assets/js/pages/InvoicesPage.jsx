@@ -62,18 +62,24 @@ function InvoicesPagesBis() {
             return(
                 <tr key={index}>
                     <td>{invoice.chrono}</td>
-                    <td>{invoice.customer.firstName} {invoice.customer.lastName}</td>
+                    <td>
+                        <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
+                    </td>
                     <td>{invoice.customer.compagny}</td>
                     <td>{invoice.sentAT}</td>
-                    <td>
+                    <td className="text-center">
                         { invoice.status === "PAID" && <span className="badge badge-success" style={{"width": "80px"}}>{invoice.status}</span> }
                         { invoice.status === "SENT" && <span className="badge badge-info">{invoice.status}</span> }
                         { invoice.status === "CANCELLED" && <span className="badge badge-warning">{invoice.status}</span> }
                     </td>
-                    <td className="text-center">
-                        <a href="#">{invoice.amount.toLocaleString()} €</a>
-                    </td>
+                    <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                     <td>
+                        <button
+                        className="btn btn-sm btn-secondary mr-1"
+                        onClick={() => handleDelete(invoice.id)}
+                    >
+                        Editer
+                    </button>
                         <button
                             disabled={invoices.length > 0}
                             className="btn btn-sm btn-danger"
@@ -104,11 +110,11 @@ function InvoicesPagesBis() {
             <table className="table table-hover">
                 <thead>
                 <tr>
-                    <th className="text-center">Numéro de facture</th>
+                    <th>Numéro de facture</th>
                     <th>Client</th>
                     <th>Entreprise</th>
                     <th>Envoyée le</th>
-                    <th >Status</th>
+                    <th className="text-center">Status</th>
                     <th className="text-center">Montant</th>
                     <th />
                 </tr>
