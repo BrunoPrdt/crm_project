@@ -9,10 +9,12 @@ function InvoicesPagesBis() {
     const [search, setSearch] = useState('');
 
     useEffect( () => {
-        findAllInvoices()
-            .then(newData => setInvoices(newData))
-            .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
-        ;
+        try {
+            findAllInvoices()
+                .then(newData => setInvoices(newData))
+        } catch(error) {
+            console.log("Oups il semble qu'il y ait une erreur: ", error.response);
+        }
     }, []);
 
     /**

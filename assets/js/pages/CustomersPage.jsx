@@ -13,9 +13,12 @@ class CustomersPagesBis extends Component {
     }
 
     componentDidMount() {
-        findAllCustomers()
-            .then(newData => this.setState({customers: newData}))
-            .catch(error => console.log("Oups il semble qu'il y ait une erreur: ", error.response))
+        try {
+            findAllCustomers()
+                .then(newData => this.setState({customers: newData}))
+        }catch(error){
+            console.log("Oups il semble qu'il y ait une erreur: ", error.response);
+        }
     }
 
     render() {
