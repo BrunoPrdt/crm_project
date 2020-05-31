@@ -64,14 +64,14 @@ function InvoicesPagesBis() {
                     <td>{invoice.chrono}</td>
                     <td>{invoice.customer.firstName} {invoice.customer.lastName}</td>
                     <td>{invoice.customer.compagny}</td>
-                    <td className="text-center">
-                        <a href="#">{invoice.amount.toLocaleString()} €</a>
-                    </td>
                     <td>{invoice.sentAT}</td>
                     <td>
-                        { invoice.status === "PAID" && <td>{invoice.status}</td> }
-                        { invoice.status === "SENT" && <td>{invoice.status}</td> }
-                        { invoice.status === "CANCELLED" && <td>{invoice.status}</td> }
+                        { invoice.status === "PAID" && <span className="badge badge-success" style={{"width": "80px"}}>{invoice.status}</span> }
+                        { invoice.status === "SENT" && <span className="badge badge-info">{invoice.status}</span> }
+                        { invoice.status === "CANCELLED" && <span className="badge badge-warning">{invoice.status}</span> }
+                    </td>
+                    <td className="text-center">
+                        <a href="#">{invoice.amount.toLocaleString()} €</a>
                     </td>
                     <td>
                         <button
@@ -107,9 +107,9 @@ function InvoicesPagesBis() {
                     <th className="text-center">Numéro de facture</th>
                     <th>Client</th>
                     <th>Entreprise</th>
-                    <th className="text-center">Montant</th>
                     <th>Envoyée le</th>
                     <th >Status</th>
+                    <th className="text-center">Montant</th>
                     <th />
                 </tr>
                 </thead>
