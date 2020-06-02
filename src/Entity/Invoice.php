@@ -14,14 +14,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  * @ApiResource(
  *     collectionOperations={"get", "post"},
- *     itemOperations={"get"},
+ *     itemOperations={"get", "delete", "PUT", "patch"},
  *     subresourceOperations={
             "api_customers_invoices_get_subresource"={
  *          "normalization_context"={"groups"={"invoices_subresource"}}
  *      }
  *     },
  *     attributes={
-     *     "pagination_enabled"=true,
+     *     "pagination_enabled"=false,
      *     "pagination_items_per_page"=20,
      *     "order": {"sentAT":"desc"}
  *      },

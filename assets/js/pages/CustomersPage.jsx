@@ -52,10 +52,10 @@ class CustomersPagesBis extends Component {
         };
 
         // filtrage des customers en fonction de la recherche
-        const filteredCustomers = this.state.customers.filter(c => (c.firstName.toLowerCase().includes(this.state.search)) ||
-            (c.lastName.toLowerCase().includes(this.state.search)) ||
-            (c.email.toLowerCase().includes(this.state.search)) ||
-            (c.compagny.toLowerCase().includes(this.state.search)));
+        const filteredCustomers = this.state.customers.filter(c => (c.firstName.toLowerCase().includes(this.state.search.toLowerCase())) ||
+            (c.lastName.toLowerCase().includes(this.state.search.toLowerCase())) ||
+            (c.email.toLowerCase().includes(this.state.search.toLowerCase())) ||
+            (c.compagny.toLowerCase().includes(this.state.search.toLowerCase())));
 
         const itemsPerPage = 10;
         const paginationTable = Pagination.getData(filteredCustomers, this.state.currentPage, itemsPerPage);

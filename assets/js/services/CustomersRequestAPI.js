@@ -17,7 +17,7 @@ export async function findAllCustomers() {
  * @param id
  * @returns {Promise<AxiosResponse<T>>}
  */
-export function deleteCustomer(id) {
-    return axios
+export async function deleteCustomer(id) {
+    return await axios
         .delete(`${SERVER_URL}/api/customers/${id}`)
 }

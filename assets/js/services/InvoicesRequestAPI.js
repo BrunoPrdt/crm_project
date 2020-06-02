@@ -17,7 +17,7 @@ export async function findAllInvoices() {
  * @param id
  * @returns {Promise<AxiosResponse<T>>}
  */
-export function deleteInvoice(id) {
-    return axios
+export async function deleteInvoice(id) {
+    return await axios
         .delete(`${SERVER_URL}/api/invoices/${id}`)
 }

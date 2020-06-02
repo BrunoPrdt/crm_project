@@ -1,8 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {findAllInvoices, deleteInvoice} from "../services/InvoicesRequestAPI";
 import Pagination from "../components/Pagination";
+import * as moment from "moment";
 
-function InvoicesPagesBis() {
+const STATUS_LABELS = {
+    PAID: "Payée",
+    SENT: "Envoyée",
+    CANCELLED: "Annulée",
+};
+
+function InvoicesPages() {
 
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -47,10 +54,12 @@ function InvoicesPagesBis() {
     };
 
     // filtrage des customers en fonction de la recherche
-    const filteredInvoices = invoices.filter(i => (i.customer.firstName.toLowerCase().includes(search)) ||
-        (i.customer.lastName.toLowerCase().includes(search)) ||
-        (i.customer.compagny.toLowerCase().includes(search)) ||
-        (i.sentAT.toLowerCase().includes(search)));
+    const filteredInvoices = invoices.filter(i => (i.customer.firstName.toLowerCase().includes(search.toLowerCase())) ||
+        (i.customer.lastName.toLowerCase().includes(search.toLowerCase())) ||
+        (i.customer.compagny.toLowerCase().includes(search.toLowerCase())) ||
+        (STATUS_LABELS[i.status].toLowerCase().includes(search.toLowerCase())) ||
+        (i.amount.toString().includes(search.toLowerCase())) ||
+        (i.sentAT.toString().includes(search.toLowerCase())));
 
     const itemsPerPage = 10;
     const paginationTable = Pagination.getData(filteredInvoices, currentPage, itemsPerPage);
@@ -68,11 +77,11 @@ function InvoicesPagesBis() {
                         <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
                     </td>
                     <td>{invoice.customer.compagny}</td>
-                    <td>{invoice.sentAT}</td>
+                    <td>{moment(invoice.sentAT).format('DD/MM/YYYY')}</td>
                     <td className="text-center">
-                        { invoice.status === "PAID" && <span className="badge badge-success" style={{"width": "80px"}}>{invoice.status}</span> }
-                        { invoice.status === "SENT" && <span className="badge badge-info">{invoice.status}</span> }
-                        { invoice.status === "CANCELLED" && <span className="badge badge-warning">{invoice.status}</span> }
+                        { invoice.status === "PAID" && <span className="badge badge-success" style={{"width": "80px"}}>{STATUS_LABELS[invoice.status]}</span> }
+                        { invoice.status === "SENT" && <span className="badge badge-info" style={{"width": "80px"}}>{STATUS_LABELS[invoice.status]}</span> }
+                        { invoice.status === "CANCELLED" && <span className="badge badge-warning">{STATUS_LABELS[invoice.status]}</span> }
                     </td>
                     <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                     <td>
@@ -83,7 +92,6 @@ function InvoicesPagesBis() {
                         Editer
                     </button>
                         <button
-                            disabled={invoices.length > 0}
                             className="btn btn-sm btn-danger"
                             onClick={() => handleDelete(invoice.id)}
                         >
@@ -131,6 +139,7 @@ function InvoicesPagesBis() {
                 </tbody>
             </table>
             {filteredInvoices.length > itemsPerPage && (
+                // TODO : aggorythme de pagination à rajouter plus tard
                 <Pagination
                     currentPage={currentPage}
                     itemsPerPage={itemsPerPage}
@@ -142,4 +151,4 @@ function InvoicesPagesBis() {
     );
 }
 
-export default InvoicesPagesBis;
+export default InvoicesPages;
