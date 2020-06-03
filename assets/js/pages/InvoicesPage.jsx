@@ -81,7 +81,7 @@ function InvoicesPages() {
                     <td className="text-center">
                         { invoice.status === "PAID" && <span className="badge badge-success" style={{"width": "80px"}}>{STATUS_LABELS[invoice.status]}</span> }
                         { invoice.status === "SENT" && <span className="badge badge-info" style={{"width": "80px"}}>{STATUS_LABELS[invoice.status]}</span> }
-                        { invoice.status === "CANCELLED" && <span className="badge badge-warning">{STATUS_LABELS[invoice.status]}</span> }
+                        { invoice.status === "CANCELLED" && <span className="badge badge-warning" style={{"width": "80px"}}>{STATUS_LABELS[invoice.status]}</span> }
                     </td>
                     <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                     <td>
