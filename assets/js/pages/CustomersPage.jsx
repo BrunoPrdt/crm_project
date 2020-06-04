@@ -75,7 +75,7 @@ class CustomersPagesBis extends Component {
                         <td>{customer.email}</td>
                         <td>{customer.compagny}</td>
                         <td className="text-center">
-                            <span className="badge badge-light">{customer.invoices.length}</span>
+                            <span className="badge badge-light" style={{"width": "80px"}}>{customer.invoices.length}</span>
                         </td>
                         <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
                         <td>
