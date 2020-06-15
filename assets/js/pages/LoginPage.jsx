@@ -3,7 +3,7 @@ import React from 'react';
 const LoginPage = () => {
     return (
         <>
-            <h1>Connexion à QuickFactures   cC</h1>
+            <h1>Connexion à QuickFactures</h1>
             <form action="">
                 <div className="form-group">
                     <label htmlFor="username">Adresse email</label>
