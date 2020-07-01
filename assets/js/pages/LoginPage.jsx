@@ -13,8 +13,11 @@ const LoginPage = () => {
                     <label htmlFor="password">Mot de passe</label>
                     <input type="password" placeholder="Mot de passe" name="password" id="password" className="form-control"/>
                 </div>
+                <div className="form-group">
+                    <button type="submit" className="btn btn-success">Se connecter</button>
+                </div>
             </form>
-        </>
+        </>//TODO: beautifull design
     );
 };
 
