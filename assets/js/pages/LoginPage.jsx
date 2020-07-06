@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
+import axios from 'axios';
+import {SERVER_URL} from '../services/Config';
 
 const LoginPage = () => {
     const [credentials, setCredentials] = useState({
         username: "",
         password: ""
     });
+    const [loginError, setLoginError] = useState("");
 
     const handleChange = event=>{
         const name = event.currentTarget.name;
@@ -12,9 +15,18 @@ const LoginPage = () => {
         setCredentials({...credentials, [name]:value});
     };
 
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();//ne recharge pas la page
-        console.log(credentials);
+        try {
+            await axios
+                .post(`${SERVER_URL}/api/login_check`, credentials)
+                //.then(response => response.data['hydra:member'])
+                .then(response => console.log(response))
+            ;
+        }catch (e) {
+            console.log(e.response);
+            setLoginError("Le compte renseigné n'existe pas ou les informations sont invalides.");
+        }
     };
     // TODO : database connexion to register
 
@@ -31,7 +43,7 @@ const LoginPage = () => {
                         placeholder="Adresse email de connexion"
                         name="username"
                         id="username"
-                        className="form-control"
+                        className={"form-control" + (loginError ? " is-invalid" : "")}
                     />
                 </div>
                 <div className="form-group">
@@ -43,8 +55,9 @@ const LoginPage = () => {
                         placeholder="Mot de passe"
                         name="password"
                         id="password"
-                        className="form-control"
+                        className={"form-control" + (loginError ? " is-invalid" : "")}
                     />
+                    {loginError && <p className="invalid-feedback">{loginError}</p>}
                 </div>
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Se connecter</button>
