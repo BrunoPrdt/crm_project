@@ -2,20 +2,26 @@ import React, {useState} from 'react';
 
 const LoginPage = () => {
     const [credentials, setCredentials] = useState({
-        username: "Toto Lasticot",
-        password: "koko le koala"
+        username: "",
+        password: ""
     });
 
-    const handleChange = (event)=>{
+    const handleChange = event=>{
         const name = event.currentTarget.name;
         const value = event.currentTarget.value;
         setCredentials({...credentials, [name]:value});
     };
 
+    const handleSubmit = event => {
+        event.preventDefault();//ne recharge pas la page
+        console.log(credentials);
+    };
+    // TODO : database connexion to register
+
     return (
         <>
             <h1>Connexion à QuickFactures</h1>
-            <form action="">
+            <form action="" onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="username">Adresse email</label>
                     <input
