@@ -10,27 +10,22 @@ const LoginPage = () => {
     const [loginError, setLoginError] = useState("");
 
     const handleChange = event=>{
-        const name = event.currentTarget.name;
-        const value = event.currentTarget.value;
+        const {name, value} = event.currentTarget;
         setCredentials({...credentials, [name]:value});
     };
 
     const handleSubmit = async event => {
         event.preventDefault();//ne recharge pas la page
         try {
-            const token = await axios
+            await axios
                 .post(`${SERVER_URL}/api/login_check`, credentials)
-                //.then(response => response.data['hydra:member'])
                 .then(response => response.data.token)
             ;
             setLoginError("");
-            axios.defaults.headers["Authorization"] = "Bearer " + token;
         }catch (e) {
-            console.log(e.response);
             setLoginError("Le compte renseigné n'existe pas ou les informations sont invalides.");
         }
     };
-    // TODO : database connexion to register
 
     return (
         <>
