@@ -30,10 +30,10 @@ const Navbar = () => {
                             <a href="#" className="nav-link">Inscription</a>
                         </li>
                         <li className="nav-item">
-                            <a href="#" className="btn btn-success">Connexion !</a>
+                            <a href="#login" className="btn btn-success">Connexion !</a>
                         </li>
                         <li className="nav-item">
-                            <a href="#" className="btn btn-danger">Déconnexion</a>
+                            <a href="#logout" className="btn btn-danger">Déconnexion</a>
                         </li>
                     </ul>
                 </div>

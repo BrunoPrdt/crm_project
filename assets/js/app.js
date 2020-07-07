@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import CustomersPage from "./pages/CustomersPage";
 import InvoicesPage from "./pages/InvoicesPage";
 import LoginPage from "./pages/LoginPage";
+import LogoutPage from "./pages/LogoutPage";
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
@@ -24,6 +25,7 @@ function App() {
                 <Switch>
                     <Route path="/" exact component={HomePage}/>
                     <Route path="/login" component={LoginPage}/>
+                    <Route path="/logout" component={LogoutPage}/>
                     <Route path="/clients" component={CustomersPage}/>
                     <Route path="/factures" component={InvoicesPage}/>
                     <Route path="" component={NotFound} />
