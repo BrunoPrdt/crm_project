@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap';
+import { Logout } from "../pages/LogoutPage";
 
 /**
  *
@@ -7,6 +8,17 @@ import 'bootstrap';
  * @constructor
  */
 const Navbar = () => {
+
+    const app_logout = async () =>{
+        console.log('Déconnexion en cours');
+        try {
+            await Logout();
+            console.log('Vous venez d\'être déconnecté, vous allez être redirigé.');
+        }catch(e){
+            console.log('Un problème est survenu : ', e);
+        }
+    };
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -33,7 +45,7 @@ const Navbar = () => {
                             <a href="#login" className="btn btn-success">Connexion !</a>
                         </li>
                         <li className="nav-item">
-                            <a href="#logout" className="btn btn-danger">Déconnexion</a>
+                            <button className="btn btn-danger" onClick={app_logout}>Déconnexion</button>
                         </li>
                     </ul>
                 </div>
