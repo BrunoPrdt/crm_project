@@ -1,19 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import 'bootstrap';
 import { Logout } from "../pages/LogoutPage";
+import {withRouter} from "react-router";
 
 /**
  *
  * @returns {*}
  * @constructor
  */
-const Navbar = () => {
+const Navbar = (props) => {
+    const [logoutInfos, setLogoutInfos] = useState("");
 
     const app_logout = async () =>{
-        console.log('Déconnexion en cours');
+        setLogoutInfos('Déconnexion en cours');
         try {
             await Logout();
-            console.log('Vous venez d\'être déconnecté, vous allez être redirigé.');
+            setLogoutInfos('Vous venez d\'être déconnecté, vous allez être redirigé.');
+            setTimeout(function(){
+                setLogoutInfos('');
+                props.history.push('/');
+            }, 3000);
         }catch(e){
             console.log('Un problème est survenu : ', e);
         }
@@ -50,8 +56,15 @@ const Navbar = () => {
                     </ul>
                 </div>
             </nav>
+            {logoutInfos &&
+                <div className="alert alert-dismissible alert-warning">
+                    <button type="button" className="close" data-dismiss="alert">&times;</button>
+                    <h4 className="alert-heading">Warning!</h4>
+                    <p className="mb-0"><a href="#" className="alert-link">{ logoutInfos }</a>.</p>
+                </div>
+            }
         </div>
     );
 };
 
-export default Navbar;
+export default withRouter(Navbar);
