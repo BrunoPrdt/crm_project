@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import 'bootstrap';
 import { Logout } from "../pages/LogoutPage";
 import {withRouter} from "react-router";
+import { NavLink } from "react-router-dom";
 
 /**
  *
@@ -28,7 +29,7 @@ const Navbar = (props) => {
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-                <a className="navbar-brand" href="/#">QuickFactures</a>
+                <NavLink className="navbar-brand" to="/">QuickFactures</NavLink>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
                         aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"/>
@@ -37,18 +38,18 @@ const Navbar = (props) => {
                 <div className="collapse navbar-collapse" id="navbarColor01">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
-                            <a className="nav-link" href="/#clients">Clients</a>
+                            <NavLink className="nav-link" to="/clients">Clients</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/#factures">Factures</a>
+                            <NavLink className="nav-link" to="/factures">Factures</NavLink>
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
-                            <a href="#" className="nav-link">Inscription</a>
+                            <NavLink to="" className="nav-link">Inscription</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a href="#login" className="btn btn-success">Connexion !</a>
+                            <NavLink to="/login" className="btn btn-success">Connexion !</NavLink>
                         </li>
                         <li className="nav-item">
                             <button className="btn btn-danger" onClick={app_logout}>Déconnexion</button>
