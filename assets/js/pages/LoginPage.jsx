@@ -26,11 +26,14 @@ const LoginPage = (props) => {
             ;
             props.onLogin(true);
             setLoginError("");
-            let setupData =  SETUP_APP();
-            userContextValue.updateUserData(setupData);
+            let setupData =  SETUP_APP();//TODO faire en sorte de récup ici les data php pour update
             setTimeout(function(){
-                props.history.push('/');//TODO redirect don't work
-                //return  <Redirect  to={ SERVER_URL } />;
+                console.log('1', userContextValue);
+                console.log("2", setupData);
+                userContextValue.updateUserData(setupData);
+            }, 500);
+            setTimeout(function(){
+                props.history.push('/');
             }, 500);
         }catch (e) {
             console.log(e);

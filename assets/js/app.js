@@ -19,9 +19,9 @@ import {SETUP_APP} from "./services/Config";
 
 function App() {
 
-    const [data, setData] = useState(SETUP_APP());
     let userContextValue;
     const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI());
+    const [data, setData] = useState(SETUP_APP());
 
     userContextValue = {
         userData: data,
@@ -31,17 +31,17 @@ function App() {
     return(
         <HashRouter>
             <UserContext.Provider value={userContextValue}>
-                <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated}/>
+                <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated} />
                 <main className="container pt-5">
                     <Switch>
                         <Route path="/" exact
-                               render={props => <HomePage auth={isAuthenticated} />}
+                               render={props => <HomePage auth={isAuthenticated}{...props} />}
                         />
                         <Route path="/login"
-                               render={props => <LoginPage onLogin={setIsAuthenticated}/>}
+                               render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />}
                        />
-                        <Route path="/clients" component={CustomersPage}/>
-                        <Route path="/factures" component={InvoicesPage}/>
+                        <Route path="/clients" component={CustomersPage} />
+                        <Route path="/factures" component={InvoicesPage} />
                         <Route path="" component={NotFound} />
                     </Switch>
                 </main>

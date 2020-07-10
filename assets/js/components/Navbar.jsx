@@ -15,18 +15,20 @@ const Navbar = (props) => {
     const userData = useContext(UserContext);
 
     const app_logout = async () =>{
-        setLogoutInfos('Déconnexion en cours');
+        setTimeout(function () {
+            setLogoutInfos('Déconnexion en cours');
+        });
         try {
             await Logout();
             props.onLogout(false);
             setLogoutInfos('Vous venez d\'être déconnecté, vous allez être redirigé.');
             setTimeout(function(){
                 setLogoutInfos('');
-                //props.history.push('/');
-                return  <Redirect  to="/" />;
-            }, 3000);
+                props.history.push('/');
+            }, 1000);
         }catch(e){
             console.log('Un problème est survenu : ', e);
+            props.history.push('/');
         }
     };
 
