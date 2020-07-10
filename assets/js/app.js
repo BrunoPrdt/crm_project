@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDom from 'react-dom'
 import {HashRouter, Switch, Route} from 'react-router-dom';
 import UserContext from "./services/UserContext";
+import AuthAPI from "./services/AuthAPI";
 
 // any CSS you import will output into a single css file (app.css in this case)
 import '../css/app.css';
@@ -18,24 +19,27 @@ import {SETUP_APP} from "./services/Config";
 
 function App() {
 
-    let data = SETUP_APP();
+    const [data, setData] = useState(SETUP_APP());
     let userContextValue;
+    const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI());
 
-    if (data){
-         userContextValue = {
-            userData: data,
-            updateUserData: console.log(data),
-        }
-    }
+    userContextValue = {
+        userData: data,
+        updateUserData: setData,
+    };
 
     return(
         <HashRouter>
             <UserContext.Provider value={userContextValue}>
-                <Navbar/>
+                <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated}/>
                 <main className="container pt-5">
                     <Switch>
-                        <Route path="/" exact component={HomePage}/>
-                        <Route path="/login" component={LoginPage}/>
+                        <Route path="/" exact
+                               render={props => <HomePage auth={isAuthenticated} />}
+                        />
+                        <Route path="/login"
+                               render={props => <LoginPage onLogin={setIsAuthenticated}/>}
+                       />
                         <Route path="/clients" component={CustomersPage}/>
                         <Route path="/factures" component={InvoicesPage}/>
                         <Route path="" component={NotFound} />

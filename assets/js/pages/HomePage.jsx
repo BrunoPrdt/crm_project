@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import UserContext from "../services/UserContext";
 import {NavLink} from "react-router-dom";
 
@@ -7,16 +7,13 @@ import {NavLink} from "react-router-dom";
  * @returns {*}
  * @constructor
  */
-const HomePage = () => {
-    const [isOnline, setIsOnline] =  useState(false);
+const HomePage = (props) => {
     const userData = useContext(UserContext);
-    useEffect(()=>{
-        userData && setIsOnline(true);
-    });//TODO revoir le display dynamique conditionel qui ne s'exécute que lords du rechargement de la page
+
     return (
         <div className="jumbotron">
-            <h1 className="display-3">Bienvenue {isOnline ? userData.userData.firstName : "sur QuickFactures"} !</h1>
-            {userData ?
+            <h1 className="display-3">Bienvenue {props.auth ? userData.userData.firstName : "sur QuickFactures"} !</h1>
+            {props.auth ?
                 <>
                     <p className="lead">Que souhaitez-vous faire ?</p>
                 </> :
@@ -25,7 +22,7 @@ const HomePage = () => {
                 </>
             }
             <hr className="my-4" />
-            {userData ?
+            {props.auth ?
                 <>
                     <p>Vous pouvez créer une facture ou un nouveau clients, visualiser les existants.</p>
                 </> :

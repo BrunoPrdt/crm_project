@@ -18,10 +18,12 @@ const Navbar = (props) => {
         setLogoutInfos('Déconnexion en cours');
         try {
             await Logout();
+            props.onLogout(false);
             setLogoutInfos('Vous venez d\'être déconnecté, vous allez être redirigé.');
             setTimeout(function(){
                 setLogoutInfos('');
-                props.history.push('/');
+                //props.history.push('/');
+                return  <Redirect  to="/" />;
             }, 3000);
         }catch(e){
             console.log('Un problème est survenu : ', e);
@@ -38,7 +40,7 @@ const Navbar = (props) => {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarColor01">
-                    {userData &&
+                    {props.auth &&
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/clients">Clients</NavLink>
@@ -49,7 +51,7 @@ const Navbar = (props) => {
                     </ul>
                     }
                     <ul className="navbar-nav ml-auto">
-                        {userData ?
+                        {props.auth ?
                             <>
                                 <li className="nav-item">
                                     <button className="btn btn-danger" onClick={app_logout}>Déconnexion</button>

@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import axios from 'axios';
-import {SERVER_URL} from '../services/Config';
+import {SERVER_URL, SETUP_APP} from '../services/Config';
+import { Redirect } from "react-router-dom";
+import UserContext from "../services/UserContext";
 
 const LoginPage = (props) => {
     const [credentials, setCredentials] = useState({
@@ -8,6 +10,7 @@ const LoginPage = (props) => {
         password: ""
     });
     const [loginError, setLoginError] = useState("");
+    const userContextValue = useContext(UserContext);
 
     const handleChange = event=>{
         const {name, value} = event.currentTarget;
@@ -21,9 +24,16 @@ const LoginPage = (props) => {
                 .post(`${SERVER_URL}/api/login_check`, credentials)
                 .then(response => response.data.token)
             ;
+            props.onLogin(true);
             setLoginError("");
-            props.history.push('/');
+            let setupData =  SETUP_APP();
+            userContextValue.updateUserData(setupData);
+            setTimeout(function(){
+                props.history.push('/');//TODO redirect don't work
+                //return  <Redirect  to={ SERVER_URL } />;
+            }, 500);
         }catch (e) {
+            console.log(e);
             setLoginError("Le compte renseigné n'existe pas ou les informations sont invalides.");
         }
     };
