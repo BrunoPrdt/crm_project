@@ -10,14 +10,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
+    const name = '__Host-JWT';
+
     /**
      * @Route("/", name="app")
+     * @param Request $request
+     * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->render('app/index.html.twig', [
-            'controller_name' => 'AppController',
-        ]);
+        $name = self::name;
+        if ($request->cookies->get($name)){
+            $token = $request->cookies->get($name);
+            return $this->render('app/index.html.twig', [
+                'controller_name' => 'AppController',
+                'token' => $token,
+            ]);
+        }
+        else{
+            return $this->render('app/index.html.twig', [
+                'controller_name' => 'AppController',
+            ]);
+        }
     }
 
     /**
@@ -27,7 +41,7 @@ class AppController extends AbstractController
      */
     public function logout(Request $request)
     {
-        $name = '__Host-JWT';
+        $name = self::name;
         if ($request->cookies->get($name)){
             $response = new Response();
             $response->headers->setCookie(

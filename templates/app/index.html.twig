@@ -9,7 +9,11 @@
 
 {% block body %}
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    {% if token is defined %}
+    <div id="root" data-token={{ token }}></div>
+    {% else %}
     <div id="root"></div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import {SERVER_URL} from '../services/Config';
 
-const LoginPage = () => {
+const LoginPage = (props) => {
     const [credentials, setCredentials] = useState({
         username: "",
         password: ""
@@ -22,6 +22,7 @@ const LoginPage = () => {
                 .then(response => response.data.token)
             ;
             setLoginError("");
+            props.history.push('/');
         }catch (e) {
             setLoginError("Le compte renseigné n'existe pas ou les informations sont invalides.");
         }

@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
+import UserContext from "../services/UserContext";
 import 'bootstrap';
 import { Logout } from "../pages/LogoutPage";
 import {withRouter} from "react-router";
@@ -11,6 +12,7 @@ import { NavLink } from "react-router-dom";
  */
 const Navbar = (props) => {
     const [logoutInfos, setLogoutInfos] = useState("");
+    const userData = useContext(UserContext);
 
     const app_logout = async () =>{
         setLogoutInfos('Déconnexion en cours');
@@ -36,6 +38,7 @@ const Navbar = (props) => {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarColor01">
+                    {userData &&
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/clients">Clients</NavLink>
@@ -44,16 +47,24 @@ const Navbar = (props) => {
                             <NavLink className="nav-link" to="/factures">Factures</NavLink>
                         </li>
                     </ul>
+                    }
                     <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <NavLink to="" className="nav-link">Inscription</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink to="/login" className="btn btn-success">Connexion !</NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <button className="btn btn-danger" onClick={app_logout}>Déconnexion</button>
-                        </li>
+                        {userData ?
+                            <>
+                                <li className="nav-item">
+                                    <button className="btn btn-danger" onClick={app_logout}>Déconnexion</button>
+                                </li>
+                            </> :
+                            <>
+                                <li className="nav-item">
+                                    <NavLink to="/register" className="nav-link">Inscription</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/login" className="btn btn-success">Connexion !</NavLink>
+                                </li>
+                            </>
+
+                        }
                     </ul>
                 </div>
             </nav>
