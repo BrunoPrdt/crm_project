@@ -12,7 +12,7 @@ import { NavLink } from "react-router-dom";
  */
 const Navbar = (props) => {
     const [logoutInfos, setLogoutInfos] = useState("");
-    const userData = useContext(UserContext);
+    const userData = useContext(UserContext);//TODO implement avatar
 
     const app_logout = async () =>{
         setTimeout(function () {

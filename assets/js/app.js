@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import ReactDom from 'react-dom'
-import {HashRouter, Switch, Route} from 'react-router-dom';
+import {HashRouter, Switch, Route, Redirect} from 'react-router-dom';
 import UserContext from "./services/UserContext";
 import AuthAPI from "./services/AuthAPI";
 
@@ -40,8 +40,20 @@ function App() {
                         <Route path="/login"
                                render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />}
                        />
-                        <Route path="/clients" component={CustomersPage} />
-                        <Route path="/factures" component={InvoicesPage} />
+                        <Route path="/clients" render={
+                               props => {
+                                   if(isAuthenticated) return <CustomersPage{...props} />;
+                                   return <Redirect to="/login"/>
+                                }
+                               }
+                        />
+                        <Route path="/factures" render={
+                            props => {
+                                if(isAuthenticated) return <InvoicesPage{...props} />;
+                                return <Redirect to="/login"/>
+                            }
+                        }
+                        />
                         <Route path="" component={NotFound} />
                     </Switch>
                 </main>

@@ -28,7 +28,7 @@ const LoginPage = (props) => {
             setLoginError("");
             let setupData =  SETUP_APP();//TODO faire en sorte de récup ici les data php pour update
             setTimeout(function(){
-                console.log('1', userContextValue);
+                console.log('1', userContextValue);//TODO suppr les console.log après debug
                 console.log("2", setupData);
                 userContextValue.updateUserData(setupData);
             }, 500);
