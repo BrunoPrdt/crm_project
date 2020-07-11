@@ -13,6 +13,7 @@ import CustomersPage from "./pages/CustomersPage";
 import InvoicesPage from "./pages/InvoicesPage";
 import LoginPage from "./pages/LoginPage";
 import {SETUP_APP} from "./services/Config";
+import {ProtectedRoute} from "./services/ProtectedRoute";
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
@@ -34,26 +35,10 @@ function App() {
                 <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated} />
                 <main className="container pt-5">
                     <Switch>
-                        <Route path="/" exact
-                               render={props => <HomePage auth={isAuthenticated}{...props} />}
-                        />
-                        <Route path="/login"
-                               render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />}
-                       />
-                        <Route path="/clients" render={
-                               props => {
-                                   if(isAuthenticated) return <CustomersPage{...props} />;
-                                   return <Redirect to="/login"/>
-                                }
-                               }
-                        />
-                        <Route path="/factures" render={
-                            props => {
-                                if(isAuthenticated) return <InvoicesPage{...props} />;
-                                return <Redirect to="/login"/>
-                            }
-                        }
-                        />
+                        <Route path="/" exact render={props => <HomePage auth={isAuthenticated}{...props} />} />
+                        <Route path="/login" render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />} />
+                        <ProtectedRoute path="/clients" auth={isAuthenticated} component={CustomersPage} />
+                        <ProtectedRoute path="/factures" auth={isAuthenticated} component={InvoicesPage} />
                         <Route path="" component={NotFound} />
                     </Switch>
                 </main>
