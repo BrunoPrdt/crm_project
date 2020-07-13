@@ -3,6 +3,7 @@ import axios from 'axios';
 import {SERVER_URL, SETUP_APP} from '../services/Config';
 import { Redirect } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import Field from "../components/Field";
 
 /**
  *
@@ -60,31 +61,12 @@ const LoginPage = (props) => {
         <>
             <h1>Connexion à QuickFactures</h1>
             <form action="" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse email</label>
-                    <input
-                        onChange={handleChange}
-                        value={credentials.username}
-                        type="email"
-                        placeholder="Adresse email de connexion"
-                        name="username"
-                        id="username"
-                        className={"form-control" + (loginError ? " is-invalid" : "")}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        onChange={handleChange}
-                        value={credentials.password}
-                        type="password"
-                        placeholder="Mot de passe"
-                        name="password"
-                        id="password"
-                        className={"form-control" + (loginError ? " is-invalid" : "")}
-                    />
-                    {loginError && <p className="invalid-feedback">{loginError}</p>}
-                </div>
+                <Field name="username" label="Adresse email" type="email" value={credentials.username} placeholder="Adresse email de connexion"
+                       onChange={handleChange} error={loginError}
+                />
+                <Field name="password" label="Mot de passe" type="password" value={credentials.password} placeholder="Mot de passe"
+                       onChange={handleChange} error={loginError}
+                />
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Se connecter</button>
                 </div>
