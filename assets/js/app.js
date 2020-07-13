@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import ReactDom from 'react-dom'
 import {HashRouter, Switch, Route, Redirect} from 'react-router-dom';
-import UserContext from "./services/UserContext";
+import UserContext from "./context/UserContext";
+// import AuthContext from "./context/AuthContext";
 import AuthAPI from "./services/AuthAPI";
 
 // any CSS you import will output into a single css file (app.css in this case)
@@ -20,30 +21,34 @@ import {ProtectedRoute} from "./services/ProtectedRoute";
 
 function App() {
 
-    let userContextValue;
+    let userContextValue, authContextValue;
     const [isAuthenticated, setIsAuthenticated] = useState(AuthAPI());
     const [data, setData] = useState(SETUP_APP());
 
+    authContextValue= {
+        isAuthenticated,
+        setIsAuthenticated,
+    };
     userContextValue = {
         userData: data,
         updateUserData: setData,
     };
-
+//TODO finir d'implémenter le AuthContext => voir pour le multi context
     return(
-        <HashRouter>
-            <UserContext.Provider value={userContextValue}>
-                <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated} />
-                <main className="container pt-5">
-                    <Switch>
-                        <Route path="/" exact render={props => <HomePage auth={isAuthenticated}{...props} />} />
-                        <Route path="/login" render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />} />
-                        <ProtectedRoute path="/clients" auth={isAuthenticated} component={CustomersPage} />
-                        <ProtectedRoute path="/factures" auth={isAuthenticated} component={InvoicesPage} />
-                        <Route path="" component={NotFound} />
-                    </Switch>
-                </main>
-            </UserContext.Provider>
-        </HashRouter>
+        <UserContext.Provider value={userContextValue}>
+            <HashRouter>
+                    <Navbar auth={isAuthenticated} onLogout={setIsAuthenticated} />
+                    <main className="container pt-5">
+                        <Switch>
+                            <Route path="/" exact render={props => <HomePage auth={isAuthenticated}{...props} />} />
+                            <Route path="/login" render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />} />
+                            <ProtectedRoute path="/clients" auth={isAuthenticated} component={CustomersPage} />
+                            <ProtectedRoute path="/factures" auth={isAuthenticated} component={InvoicesPage} />
+                            <Route path="" component={NotFound} />
+                        </Switch>
+                    </main>
+            </HashRouter>
+        </UserContext.Provider>
     )
 }
 

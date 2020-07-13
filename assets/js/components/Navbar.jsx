@@ -1,5 +1,6 @@
 import React, {useContext, useState} from 'react';
-import UserContext from "../services/UserContext";
+import UserContext from "../context/UserContext";
+import AuthContext from "../context/AuthContext";
 import 'bootstrap';
 import { Logout } from "../pages/LogoutPage";
 import {withRouter} from "react-router";
@@ -13,7 +14,12 @@ import { NavLink } from "react-router-dom";
 const Navbar = (props) => {
     const [logoutInfos, setLogoutInfos] = useState("");
     const userData = useContext(UserContext);//TODO implement avatar
+    const auth = useContext(AuthContext);
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     const app_logout = async () =>{
         setTimeout(function () {
             setLogoutInfos('Déconnexion en cours');

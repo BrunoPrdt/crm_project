@@ -9,6 +9,11 @@ const STATUS_LABELS = {
     CANCELLED: "Annulée",
 };
 
+/**
+ *
+ * @returns {*}
+ * @constructor
+ */
 function InvoicesPages() {
 
     const [invoices, setInvoices] = useState([]);

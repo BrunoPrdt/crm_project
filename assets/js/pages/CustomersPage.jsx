@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
 
+/**
+ *
+ */
 class CustomersPagesBis extends Component {
     constructor(props) {
         super(props);

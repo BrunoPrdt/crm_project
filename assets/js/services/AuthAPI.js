@@ -1,5 +1,9 @@
 import jwtDecode from 'jwt-decode';
 
+/**
+ *
+ * @returns {boolean}
+ */
 export default function isAuthenticated() {
     const token = document.getElementById('root').dataset.token;
     if (token){

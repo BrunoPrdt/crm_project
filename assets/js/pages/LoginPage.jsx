@@ -2,8 +2,14 @@ import React, {useState, useContext} from 'react';
 import axios from 'axios';
 import {SERVER_URL, SETUP_APP} from '../services/Config';
 import { Redirect } from "react-router-dom";
-import UserContext from "../services/UserContext";
+import UserContext from "../context/UserContext";
 
+/**
+ *
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 const LoginPage = (props) => {
     const [credentials, setCredentials] = useState({
         username: "",
@@ -12,11 +18,20 @@ const LoginPage = (props) => {
     const [loginError, setLoginError] = useState("");
     const userContextValue = useContext(UserContext);
 
+    /**
+     *
+     * @param event
+     */
     const handleChange = event=>{
         const {name, value} = event.currentTarget;
         setCredentials({...credentials, [name]:value});
     };
 
+    /**
+     *
+     * @param event
+     * @returns {Promise<void>}
+     */
     const handleSubmit = async event => {
         event.preventDefault();//ne recharge pas la page
         try {
