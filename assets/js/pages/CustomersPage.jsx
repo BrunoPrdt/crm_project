@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
+import {Link} from "react-router-dom";
 
 /**
  *
@@ -27,13 +28,13 @@ class CustomersPagesBis extends Component {
     render() {
         /**
          * Gestion du changement de page
-         * @param page
+         * @param {number} page
          */
         const handlePageChange = (page) => this.setState({currentPage: page});
 
         /**
          * Gestion de la recherche
-         * @param e
+         * @param {event} e
          */
         const handleSearch = (e) => {
             this.setState({search: e.currentTarget.value});
@@ -42,7 +43,7 @@ class CustomersPagesBis extends Component {
 
         /**
          *
-         * @param id
+         * @param id {id}
          */
         const handleDelete = async (id) => {
             const originalCustomers = [...this.state.customers];
@@ -96,8 +97,11 @@ class CustomersPagesBis extends Component {
         }
 
         return (
-            <div>
-                <h1>Liste des clients</h1>
+            <>
+                <div className="d-flex mb-3 justify-content-between align-items-center">
+                    <h1>Liste des clients</h1>
+                    <Link className="btn btn-primary" to="/clients/nouveau">Nouveau client</Link>
+                </div>
 
                 <div className="form-group">
                     <input
@@ -138,7 +142,7 @@ class CustomersPagesBis extends Component {
                         onPageChange={handlePageChange}
                     />
                 )}
-            </div>
+            </>
         );
     }
 }

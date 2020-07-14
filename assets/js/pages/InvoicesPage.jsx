@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {findAllInvoices, deleteInvoice} from "../services/InvoicesRequestAPI";
 import Pagination from "../components/Pagination";
 import * as moment from "moment";
+import {Link} from "react-router-dom";
 
 const STATUS_LABELS = {
     PAID: "Payée",
@@ -109,8 +110,11 @@ function InvoicesPages() {
     }
 
     return (
-        <div>
-            <h1>Liste des factures</h1>
+        <>
+            <div className="d-flex mb-3 justify-content-between align-items-center">
+                <h1>Liste des factures</h1>
+                <Link className="btn btn-primary" to="/factures/nouveau">Nouvelle facture</Link>
+            </div>
 
             <div className="form-group">
                 <input
@@ -152,7 +156,7 @@ function InvoicesPages() {
                     onPageChange={handlePageChange}
                 />
             )}
-        </div>
+        </>
     );
 }
 

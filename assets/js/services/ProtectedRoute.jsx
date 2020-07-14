@@ -4,14 +4,16 @@ import {Redirect} from "react-router-dom";
 
 /**
  *
- * @param props
+ * @param {boolean} auth (isAuthenticated)
+ * @param {string} path
+ * @param {react.Component} component
  * @returns {*}
  * @constructor
  */
-export const ProtectedRoute = props => {
+export const ProtectedRoute = ({auth, path, component}) => {
     return(
-        props.auth? (
-        <Route path={props.path} component={ props.component } />
+        auth? (
+        <Route path={path} exact component={ component } />
         ) : (
         <Redirect to="/login" />)
     )

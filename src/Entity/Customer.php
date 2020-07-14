@@ -41,16 +41,16 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="3", max="255", minMessage="Le prénom doit faire entre 3 et 255 caractères", maxMessage="Le prénom doit faire entre 3 et 255 caractères")
      * @Assert\NotBlank(message="Le prénom du customer est obligatoire")
-     * @Assert\Length(min="3", max="255", minMessage="Le prénom doit faire en 3 et 255 caractères", maxMessage="Le prénom doit faire en 3 et 255 caractères")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="3", max="255", minMessage="Le nom doit faire entre 3 et 255 caractères", maxMessage="Le nom doit faire entre 3 et 255 caractères")
      * @Assert\NotBlank(message="Le nom du customer est obligatoire")
-     * @Assert\Length(min="3", max="255", minMessage="Le nom doit faire en 3 et 255 caractères", maxMessage="Le nom doit faire en 3 et 255 caractères")
      */
     private $lastName;
 
@@ -65,6 +65,7 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="3", max="35", minMessage="Le nom de la société doit faire entre 3 et 35 caractères", maxMessage="Le nom de la société doit faire entre 3 et 35 caractères", allowEmptyString=true)
      */
     private $compagny;
 
@@ -81,6 +82,34 @@ class Customer
      * @Assert\NotBlank(message="L'utilisateur est obligatoire")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="10", max="10", minMessage="Le numéro de téléphone doit faire 10 caractères", maxMessage="Le numéro de téléphone doit faire 10 caractères", allowEmptyString=true)
+     */
+    private $phonenumber;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="3", max="255", minMessage="L'adresse doit faire entre 3 et 255 caractères", maxMessage="L'adresse doit faire entre 3 et 255 caractères", allowEmptyString=true)
+     */
+    private $adress;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="5", max="5", minMessage="Le code postale doit faire 5 caractères", maxMessage="Le code postale doit faire 5 caractères", allowEmptyString=true)
+     */
+    private $zipcode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"customers_read", "invoices_read"})
+     * @Assert\Length(min="3", max="25", minMessage="La ville doit faire entre 3 et 25 caractères", maxMessage="La ville doit faire entre 3 et 25 caractères", allowEmptyString=true)
+     */
+    private $city;
 
     public function __construct()
     {
@@ -227,6 +256,54 @@ class Customer
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPhonenumber(): ?int
+    {
+        return $this->phonenumber;
+    }
+
+    public function setPhonenumber(?string $phonenumber): self
+    {
+        $this->phonenumber = $phonenumber;
+
+        return $this;
+    }
+
+    public function getAdress(): ?string
+    {
+        return $this->adress;
+    }
+
+    public function setAdress(?string $adress): self
+    {
+        $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getZipcode(): ?string
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(?string $zipcode): self
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
