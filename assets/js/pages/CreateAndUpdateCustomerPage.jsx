@@ -12,7 +12,7 @@ import {createCustomer, updateCustomerById} from "../services/CustomersRequestAP
  * @returns {*}
  * @constructor
  */
-const CreateCustomerPage = ({history, match}) => {
+const CreateAndUpdateCustomerPage = ({history, match}) => {
 
     /**
      * initial state for customer  creation
@@ -214,4 +214,4 @@ const CreateCustomerPage = ({history, match}) => {
     );
 };
 
-export default CreateCustomerPage;
+export default CreateAndUpdateCustomerPage;
