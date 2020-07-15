@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const CreateAndUpdateInvoicePage = ({history, match}) => {
 
     const [invoice, setInvoice] = useState({});
+    const [errors, setErrors] = useState({});
     const [editing, setEditing] = useState(false);
     const id = match.params.id;
 
