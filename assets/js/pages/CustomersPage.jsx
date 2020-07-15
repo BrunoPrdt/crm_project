@@ -74,7 +74,7 @@ class CustomersPagesBis extends Component {
                     <tr key={index}>
                         <td>{customer.id}</td>
                         <td>
-                            <a href="#">{customer.firstName} {customer.lastName}</a>
+                            <Link to={`/clients/${customer.id}`}>{customer.firstName} {customer.lastName}</Link>
                         </td>
                         <td>{customer.email}</td>
                         <td>{customer.compagny}</td>
