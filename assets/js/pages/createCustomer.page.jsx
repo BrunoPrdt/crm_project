@@ -3,15 +3,16 @@ import Field from "../components/Field";
 import {Link} from "react-router-dom";
 import axios, {AxiosStatic as Axios} from 'axios';
 import {SERVER_URL} from "../services/Config";
-import {findOneCustomerById} from "../services/CustomersRequestAPI";
+import {createCustomer, updateCustomerById} from "../services/CustomersRequestAPI";
 
 /**
  *
- * @param props
+ * @param history
+ * @param match
  * @returns {*}
  * @constructor
  */
-const CreateCustomerPage = (props) => {
+const CreateCustomerPage = ({history, match}) => {
 
     /**
      * initial state for customer  creation
@@ -39,7 +40,13 @@ const CreateCustomerPage = (props) => {
     });
 
     const [editing, setEditing] = useState(false);
-    const id = props.match.params.id;
+    const id = match.params.id;
+//TODO : refactor in CustomersRequestAPI.js
+    /**
+     *
+     * @param {number} id
+     * @returns {Promise<void>}
+     */
     const getOneCustomerById = async (id) => {
         const source = axios.CancelToken.source();
         try {
@@ -58,6 +65,9 @@ const CreateCustomerPage = (props) => {
         }
     };
 
+    /**
+     * load customer objet if id !nouveau
+     */
     useEffect( () => {
         let mounted = true;
         if (id !== "nouveau") {
@@ -66,13 +76,16 @@ const CreateCustomerPage = (props) => {
                 getOneCustomerById(id);
             }
         }
+        /**
+         * clean useeffect after load
+         */
         return function cleanup() {
             mounted = false
         };
     }, []);
 
     /**
-     *
+     * Input event
      * @param event
      */
     function handleChange(event) {
@@ -81,31 +94,35 @@ const CreateCustomerPage = (props) => {
     }
 
     /**
-     *
+     * Submit event
      * @param event
      * @returns {Promise<void>}
      */
     const handleSubmit = async event => {
+        /**
+         * don't reload dom
+         */
         event.preventDefault();
         try {
             if (editing) {
-                await axios.put(`${SERVER_URL}/api/customers/${id}`, customer);
+                await updateCustomerById(id, customer);
                 //TODO : flash notification de succès !
                 setErrors({});
                 setTimeout(function () {
-                    props.history.replace('/clients');
+                    history.replace('/clients');
                 }, 500);
             }
-            await axios.post(`${SERVER_URL}/api/customers`, customer);
+            await createCustomer(customer);
             //TODO : flash notification de succès !
             setErrors({});
             setTimeout(function () {
-                props.history.replace('/clients');
+                history.replace('/clients');
             }, 500);
-        }catch (error) {
-            if (error.response.data.violations) {
+        }catch (response) {
+            const {violations} = response.data;
+            if (violations) {
                 const apiErrors = {};
-                error.response.data.violations.map(violation => {
+                violations.map(violation => {
                     apiErrors[violation.propertyPath] = violation.message;
                 });
                 setErrors(apiErrors);

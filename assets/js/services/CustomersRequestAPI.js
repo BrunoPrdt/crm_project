@@ -14,19 +14,20 @@ export async function findAllCustomers() {
 
 /**
  *
- * @param id
- * @returns {Promise<AxiosResponse<T>>}
+ * @param {number} id
+ * @param {object} customer
  */
-export const findOneCustomerById = async (id) => {
-    try {
-        const data = await axios
-            .get(`${SERVER_URL}/api/customers/${id}`)
-            .then(response => response.data);
-        console.log("data 1", data);
-    }catch (error) {
-        console.log(error.response);
-    }
-};
+export function updateCustomerById(id, customer) {
+    axios.put(`${SERVER_URL}/api/customers/${id}`, customer);
+}
+
+/**
+ *
+ * @param {object} customer
+ */
+export function createCustomer(customer) {
+    axios.post(`${SERVER_URL}/api/customers`, customer);
+}
 
 /**
  *
