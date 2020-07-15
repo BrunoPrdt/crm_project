@@ -83,6 +83,7 @@ class CustomersPagesBis extends Component {
                         </td>
                         <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
                         <td>
+                            <Link to={`/clients/${customer.id}`} className="btn btn-sm btn-secondary mr-1">Editer</Link>
                             <button
                                 disabled={customer.invoices.length > 0}
                                 className="btn btn-sm btn-danger"

@@ -14,6 +14,23 @@ export async function findAllInvoices() {
 
 /**
  *
+ * @param {number} id
+ * @param {object} invoice
+ */
+export function updateInvoiceById(id, invoice) {
+    axios.put(`${SERVER_URL}/api/invoices/${id}`, invoice);
+}
+
+/**
+ *
+ * @param {object} invoice
+ */
+export function createInvoice(invoice) {
+    axios.post(`${SERVER_URL}/api/invoices`, invoice);
+}
+
+/**
+ *
  * @param id
  * @returns {Promise<AxiosResponse<T>>}
  */

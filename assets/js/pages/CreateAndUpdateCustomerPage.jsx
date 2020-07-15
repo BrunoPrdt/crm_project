@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Field from "../components/Field";
+import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import axios, {AxiosStatic as Axios} from 'axios';
 import {SERVER_URL} from "../services/Config";
@@ -39,6 +39,7 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         city: "",
     });
 
+    const [axiosError, setAxiosError] = useState("");
     const [editing, setEditing] = useState(false);
     const id = match.params.id;
 //TODO : refactor in CustomersRequestAPI.js
@@ -59,8 +60,10 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
             setCustomer({firstName, lastName, email, compagny, phoneNumber, address, zipcode, city});
         }catch (error) {
             if (Axios.isCancel(error)) {
+                setAxiosError(error);
             } else {
-                throw error
+                setAxiosError(error);
+                throw error;
             }
         }
     };
@@ -134,7 +137,7 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         <>
             {!editing ? <h1 className="mb-3">Création d'un client</h1> :
                 <h1 className="mb-3">Modification d'un client</h1>}
-            {customer.error && <p className="invalid-feedback">{customer.error}</p>}
+            {axiosError && <p className="invalid-feedback">{axiosError}</p>}
             {customer.length === 0 && (
                 <div className="alert-info">
                     <p>Récupération des données</p>

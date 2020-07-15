@@ -80,7 +80,7 @@ function InvoicesPages() {
                 <tr key={index}>
                     <td>{invoice.chrono}</td>
                     <td>
-                        <a href="#">{invoice.customer.firstName} {invoice.customer.lastName}</a>
+                        <Link to={`/factures/${invoice.id}`}>{invoice.customer.firstName} {invoice.customer.lastName}</Link>
                     </td>
                     <td>{invoice.customer.compagny}</td>
                     <td>{moment(invoice.sentAT).format('DD/MM/YYYY')}</td>
@@ -91,12 +91,7 @@ function InvoicesPages() {
                     </td>
                     <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                     <td>
-                        <button
-                        className="btn btn-sm btn-secondary mr-1"
-                        onClick={() => handleDelete(invoice.id)}
-                    >
-                        Editer
-                    </button>
+                        <Link to={`/factures/${invoice.id}`} className="btn btn-sm btn-secondary mr-1">Editer</Link>
                         <button
                             className="btn btn-sm btn-danger"
                             onClick={() => handleDelete(invoice.id)}
