@@ -85,7 +85,7 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         return function cleanup() {
             mounted = false
         };
-    }, []);
+    }, [id]);
 
     /**
      * Input event

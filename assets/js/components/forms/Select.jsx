@@ -11,7 +11,7 @@ import React from 'react';
  * @returns {*}
  * @constructor
  */
-const Select = ({name, label, value, error, onChange, children}) => {
+const Select = ({name, label, value, error ="", onChange, children}) => {
     return (
         <div className="form-groups">
             <label htmlFor={name}>{label}</label>

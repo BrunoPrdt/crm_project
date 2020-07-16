@@ -18,7 +18,7 @@ export async function findAllInvoices() {
  * @param {object} invoice
  */
 export function updateInvoiceById(id, invoice) {
-    axios.put(`${SERVER_URL}/api/invoices/${id}`, invoice);
+    axios.put(`${SERVER_URL}/api/invoices/${id}`, {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`});
 }
 
 /**
@@ -26,7 +26,7 @@ export function updateInvoiceById(id, invoice) {
  * @param {object} invoice
  */
 export function createInvoice(invoice) {
-    axios.post(`${SERVER_URL}/api/invoices`, invoice);
+    axios.post(`${SERVER_URL}/api/invoices`, {...invoice, customer: `/api/customers/${invoice.customer}`});
 }
 
 /**

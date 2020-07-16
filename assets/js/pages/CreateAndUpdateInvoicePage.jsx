@@ -5,6 +5,8 @@ import Field from "../components/forms/Field";
 import Select from "../components/forms/Select";
 import {Link} from "react-router-dom";
 import {findAllCustomers} from "../services/CustomersRequestAPI";
+import axios from "axios";
+import {SERVER_URL} from "../services/Config";
 
 const CreateAndUpdateInvoicePage = ({history, match}) => {
 
@@ -16,19 +18,26 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         customer: "",
         status: "",
         sentAT: undefined,
+        chrono: undefined,
+        compagny: "",
     });
     const [errors, setErrors] = useState({
         amount: "",
         customer: "",
         status: "",
         sentAT: "",
-        axios_error: "",
+        chrono: "",
+        compagny: "",
     });
     const [customers, setCustomers] = useState([]);
     const [axiosError, setAxiosError] = useState("");
     const [editing, setEditing] = useState(false);
     const id = match.params.id;
 
+    /**
+     *
+     * @returns {Promise<void>}
+     */
     const getAllCustomers = async () => {
         try {
             const data = await findAllCustomers();
@@ -39,13 +48,33 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         }
     };
 
+    /**
+     * get all customers when dom load or reload
+     */
     useEffect(() => {
         getAllCustomers();
     }, []);
 
-    function getOneInvoiceById(id) {
-
-    }
+    /**
+     *
+     * @param {number} id
+     * @returns {Promise<void>}
+     */
+    const getOneInvoiceById = async (id) => {
+        const source = axios.CancelToken.source();
+        try {
+            const data = await axios
+                .get(`${SERVER_URL}/api/invoices/${id}`, {
+                    cancelToken: source.token,
+                })
+                .then(response => response.data);
+            const {chrono,sentAt, status, amount, customer} = data;
+            setInvoice({chrono, sentAt, status, amount, customer: customer.id, compagny: customer.compagny});
+        }catch (error) {
+            console.log(error);
+            setAxiosError(error);
+        }
+    };
 
     /**
      * load customer objet if id !nouveau
@@ -64,7 +93,7 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         return function cleanup() {
             mounted = false
         };
-    }, []);
+    }, [id]);
 
     /**
      * Input event
@@ -85,7 +114,6 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
          * don't reload dom
          */
         event.preventDefault();
-        console.log(invoice);
         try {
             if (editing) {
                 await updateInvoiceById(id, invoice);
@@ -94,16 +122,17 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                 setTimeout(function () {
                     history.replace('/factures');
                 }, 500);
+            }else {
+                let d = new Date();
+                let date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+                setInvoice(invoice.sentAT= date);
+                await createInvoice(invoice);
+                //TODO : flash notification de succès !
+                setErrors({});
+                setTimeout(function () {
+                    history.replace('/factures');
+                }, 500);
             }
-            let d = new Date();
-            let date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-            setInvoice(invoice.sentAT= date);
-            await createInvoice(invoice);
-            //TODO : flash notification de succès !
-            setErrors({});
-            setTimeout(function () {
-                history.replace('/factures');
-            }, 500);
         }catch (response) {
             const {violations} = response.data;
             if (violations) {
@@ -145,8 +174,9 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                     error={errors.customer}
                     onChange={handleChange}
                 >
+                    <option value="">Sélectionnez un client dans la liste</option>
                     {customers.map(customer =>
-                        <option key={customer.id} value={`/api/customers/${customer.id}`}>{customer.lastName} {customer.firstName}</option>
+                        <option key={customer.id} value={customer.id}>{customer.lastName} {customer.firstName}</option>
                     )}
                 </Select>
                 <Select
@@ -156,11 +186,31 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                     error={errors.status}
                     onChange={handleChange}
                     >
-                    <option value=""></option>
+                    <option value="">Sélectionnez un statut</option>
                     <option value="PAID">Payée</option>
                     <option value="CANCELLED">Annulée</option>
                     <option value="SENT">Envoyée</option>
                 </Select>
+                {editing &&
+                (<>
+                    <Field name="compagny"
+                           label="Entreprise"
+                           type="text"
+                           placeholder="Entreprise du client"
+                           value={invoice.compagny}
+                           error={errors.compagny}
+                           onChange={handleChange}
+                    />
+                    <Field name="chrono"
+                           label="Numéro de facture"
+                           type="text"
+                           placeholder="Numéro de facture"
+                           value={invoice.chrono}
+                           error={errors.chrono}
+                           onChange={handleChange}
+                    />
+                </>)
+                }
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Valider</button>
                     <Link to="/factures" className="btn btn-link">Retour à la liste</Link>

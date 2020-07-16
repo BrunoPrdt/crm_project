@@ -12,7 +12,7 @@ import React from 'react';
  * @returns {*}
  * @constructor
  */
-const Field = ({name, label, type, value, placeholder, onChange, error}) => {
+const Field = ({name, label, type, value, placeholder, onChange, error = ""}) => {
     return (
         <div className="form-group">
             <label htmlFor={name}>{label}</label>
