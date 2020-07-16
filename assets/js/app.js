@@ -17,6 +17,7 @@ import {SETUP_APP} from "./services/Config";
 import {ProtectedRoute} from "./services/ProtectedRoute";
 import CreateAndUpdateCustomerPage from "./pages/CreateAndUpdateCustomerPage";
 import CreateAndUpdateInvoicePage from "./pages/CreateAndUpdateInvoicePage";
+import RegisterPage from "./pages/RegisterPage";
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
@@ -43,6 +44,7 @@ function App() {
                     <main className="container pt-5">
                         <Switch>
                             <Route path="/" exact render={props => <HomePage auth={isAuthenticated}{...props} />} />
+                            <Route path="/register" exact component={RegisterPage} />} />
                             <Route path="/login" render={props => <LoginPage onLogin={setIsAuthenticated}{...props} />} />
                             <ProtectedRoute path="/clients/:id" auth={isAuthenticated} component={CreateAndUpdateCustomerPage} />
                             <ProtectedRoute path="/clients" auth={isAuthenticated} component={CustomersPage} />
