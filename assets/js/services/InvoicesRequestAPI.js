@@ -1,15 +1,26 @@
 import axios from 'axios';
 import {SERVER_URL} from "./Config";
+import {getCache, setCache} from "./cache";
 
 /**
  *
- * @returns {Promise<AxiosResponse<T>>}
+ * @returns {Promise<unknown>}
  */
 export async function findAllInvoices() {
-    return (await axios
-            .get(`${SERVER_URL}/api/invoices`)
-            .then(response => response.data['hydra:member'])
-    )
+    const cachedInvoices = await getCache("invoices");
+
+    if (cachedInvoices) {
+        return cachedInvoices;
+    }else {
+        return (await axios
+                .get(`${SERVER_URL}/api/invoices`)
+                .then(response => {
+                    const invoices = response.data['hydra:member'];
+                    setCache("invoices", invoices);
+                    return invoices;
+                })
+        )
+    }
 }
 
 /**
@@ -18,7 +29,16 @@ export async function findAllInvoices() {
  * @param {object} invoice
  */
 export function updateInvoiceById(id, invoice) {
-    axios.put(`${SERVER_URL}/api/invoices/${id}`, {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`});
+    axios.put(`${SERVER_URL}/api/invoices/${id}`, {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`}).then( async response => {
+        const cachedData = await getCache("invoices");
+        if (cachedData){
+            const index = cachedData.findIndex(c => c.id === +id);
+            const newCachedInvoice = response.data;
+            cachedData[index] = newCachedInvoice;
+            setCache('invoices', cachedData);
+        }
+        return response;
+    });
 }
 
 /**
@@ -26,7 +46,13 @@ export function updateInvoiceById(id, invoice) {
  * @param {object} invoice
  */
 export function createInvoice(invoice) {
-    axios.post(`${SERVER_URL}/api/invoices`, {...invoice, customer: `/api/customers/${invoice.customer}`});
+    axios.post(`${SERVER_URL}/api/invoices`, {...invoice, customer: `/api/customers/${invoice.customer}`}).then( async response => {
+        const cachedData = await getCache("invoices");
+        if (cachedData){
+            setCache('invoices', [...cachedData, response.data]);
+        }
+        return response;
+    });
 }
 
 /**
@@ -36,5 +62,11 @@ export function createInvoice(invoice) {
  */
 export async function deleteInvoice(id) {
     return await axios
-        .delete(`${SERVER_URL}/api/invoices/${id}`)
+        .delete(`${SERVER_URL}/api/invoices/${id}`).then( async response => {
+            const cachedData = await getCache("invoices");
+            if (cachedData){
+                setCache('invoices', cachedData.filter(data => data.id !== id));
+            }
+            return response;
+        })
 }
