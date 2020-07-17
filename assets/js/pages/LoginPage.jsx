@@ -1,9 +1,9 @@
 import React, {useState, useContext} from 'react';
 import axios from 'axios';
 import {SERVER_URL, SETUP_APP} from '../services/Config';
-import { Redirect } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import Field from "../components/forms/Field";
+import {toast} from "react-toastify";
 
 /**
  *
@@ -49,11 +49,13 @@ const LoginPage = (props) => {
                 userContextValue.updateUserData(setupData);
             }, 500);
             setTimeout(function(){
-                props.history.push('/');
+                toast.success("Vous êtes désormais connecté ! :)");
+                props.history.replace('/');
             }, 500);
         }catch (e) {
             console.log(e);
             setLoginError("Le compte renseigné n'existe pas ou les informations sont invalides.");
+            toast.error("Une erreur est survenue");
         }
     };
 

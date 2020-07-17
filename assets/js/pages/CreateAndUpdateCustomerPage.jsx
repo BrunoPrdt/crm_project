@@ -4,6 +4,8 @@ import {Link} from "react-router-dom";
 import axios, {AxiosStatic as Axios} from 'axios';
 import {SERVER_URL} from "../services/Config";
 import {createCustomer, updateCustomerById} from "../services/CustomersRequestAPI";
+import {toast} from "react-toastify";
+import FormContentLoader from "../components/Loaders/FormContentLoader";
 
 /**
  *
@@ -39,9 +41,9 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         city: "",
     });
 
-    const [axiosError, setAxiosError] = useState("");
     const [editing, setEditing] = useState(false);
     const id = match.params.id;
+    const [loading, setLoading] = useState(true);
 //TODO : refactor in CustomersRequestAPI.js
     /**
      *
@@ -58,13 +60,10 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
                 .then(response => response.data);
             const {firstName, lastName, email, compagny, phoneNumber, address, zipcode, city} = data;
             setCustomer({firstName, lastName, email, compagny, phoneNumber, address, zipcode, city});
+            setLoading(false);
         }catch (error) {
-            if (Axios.isCancel(error)) {
-                setAxiosError(error);
-            } else {
-                setAxiosError(error);
-                throw error;
-            }
+            console.log(error);
+            toast.error("Une erreur est survenue lors de la récupération du client demandé");
         }
     };
 
@@ -78,6 +77,8 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
             if (mounted) {
                 getOneCustomerById(id);
             }
+        }else {
+            setLoading(false);
         }
         /**
          * clean useeffect after load
@@ -109,18 +110,19 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         try {
             if (editing) {
                 await updateCustomerById(id, customer);
-                //TODO : flash notification de succès !
+                toast.success("Le client a bien été modifié");
+                setErrors({});
+                setTimeout(function () {
+                    history.replace('/clients');
+                }, 500);
+            }else {
+                await createCustomer(customer);
+                toast.success("Le client a bien été créé");
                 setErrors({});
                 setTimeout(function () {
                     history.replace('/clients');
                 }, 500);
             }
-            await createCustomer(customer);
-            //TODO : flash notification de succès !
-            setErrors({});
-            setTimeout(function () {
-                history.replace('/clients');
-            }, 500);
         }catch (response) {
             const {violations} = response.data;
             if (violations) {
@@ -129,7 +131,10 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
                     apiErrors[violation.propertyPath] = violation.message;
                 });
                 setErrors(apiErrors);
+                toast.error("Erreur(s) dans votre formulaire");
             }
+            console.log(response);
+            toast.error("Une erreur est survenue lors de la création du client");
         }
     };
 
@@ -137,13 +142,19 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
         <>
             {!editing ? <h1 className="mb-3">Création d'un client</h1> :
                 <h1 className="mb-3">Modification d'un client</h1>}
-            {axiosError && <p className="invalid-feedback">{axiosError}</p>}
             {customer.length === 0 && (
                 <div className="alert-info">
                     <p>Récupération des données</p>
                 </div>
             )}
-            <form action="" onSubmit={handleSubmit}>
+            {loading &&
+            <div>
+                <p>Chargement des données</p>
+                <FormContentLoader />
+            </div>
+            }
+
+            {!loading && <form action="" onSubmit={handleSubmit}>
                 <Field name="lastName"
                        label="Nom de famille"
                        type="text"
@@ -212,7 +223,7 @@ const CreateAndUpdateCustomerPage = ({history, match}) => {
                     <button type="submit" className="btn btn-success">Valider</button>
                     <Link to="/clients" className="btn btn-link">Retour à la liste</Link>
                 </div>
-            </form>
+            </form>}
         </>
     );
 };

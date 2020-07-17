@@ -5,6 +5,7 @@ import 'bootstrap';
 import { Logout } from "../pages/LogoutPage";
 import {withRouter} from "react-router";
 import { NavLink } from "react-router-dom";
+import {toast} from "react-toastify";
 
 /**
  *
@@ -23,11 +24,12 @@ const Navbar = (props) => {
     const app_logout = async () =>{
         setTimeout(function () {
             setLogoutInfos('Déconnexion en cours');
-        });
+        }, 500);
         try {
             await Logout();
             props.onLogout(false);
             setLogoutInfos('Vous venez d\'être déconnecté, vous allez être redirigé.');
+            toast.info("Vous êtes désormais déconnecté :-)");
             setTimeout(function(){
                 setLogoutInfos('');
                 props.history.push('/');

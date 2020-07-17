@@ -3,6 +3,8 @@ import {findAllInvoices, deleteInvoice} from "../services/InvoicesRequestAPI";
 import Pagination from "../components/Pagination";
 import * as moment from "moment";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import TableLoader from "../components/Loaders/TableLoader";
 
 const STATUS_LABELS = {
     PAID: "Payée",
@@ -20,13 +22,19 @@ function InvoicesPages() {
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect( () => {
+        setInvoices([]);
         try {
             findAllInvoices()
-                .then(newData => setInvoices(newData))
+                .then(newData => setInvoices(newData));
+            setTimeout(()=>{
+                setLoading(false);
+            }, 1000);
         } catch(error) {
             console.log("Oups il semble qu'il y ait une erreur: ", error.response);
+            toast.error("Une erreur est survenue lors du chargement des factures");
         }
     }, []);
 
@@ -53,9 +61,11 @@ function InvoicesPages() {
         const originalInvoices = [...invoices];
         setInvoices(invoices.filter(invoice => invoice.id !== id));
         try {
-            await deleteInvoice(id)
+            await deleteInvoice(id);
+            toast.success(`Facture supprimée !`)
         }catch (error) {
             setInvoices(originalInvoices);
+            toast.error("Une erreur est survenue");
         }
     };
 
@@ -133,15 +143,18 @@ function InvoicesPages() {
                     <th />
                 </tr>
                 </thead>
-                <tbody>
-                {invoices.length === 0 && (
-                    <tr>
-                        <td>Récupération des données ...</td>
-                    </tr>
-                )}
+                {!loading && <tbody>
                 {renderTable()}
-                </tbody>
+                </tbody>}
             </table>
+
+            {loading &&
+                <div>
+                    <p className="my-5">Récupération des données</p>
+                    <TableLoader />
+                </div>
+            }
+
             {filteredInvoices.length > itemsPerPage && (
                 // TODO : aggorythme de pagination à rajouter plus tard
                 <Pagination

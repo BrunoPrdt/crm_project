@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {findAllCustomers, deleteCustomer} from "../services/CustomersRequestAPI";
 import Pagination from "../components/Pagination";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
+import TableLoader from "../components/Loaders/TableLoader";
 
 /**
  *
@@ -13,15 +15,20 @@ class CustomersPagesBis extends Component {
             customers: [],
             currentPage: 1,
             search: "",
+            loading: true,
         }
     }
 
     componentDidMount() {
         try {
             findAllCustomers()
-                .then(newData => this.setState({customers: newData}))
+                .then(newData => this.setState({customers: newData}));
+            setTimeout(()=>{
+                this.setState({loading: false});
+            }, 1000);
         }catch(error){
             console.log("Oups il semble qu'il y ait une erreur: ", error.response);
+            toast.error("Une erreur est survenue lors du chargement des clients");
         }
     }
 
@@ -50,8 +57,10 @@ class CustomersPagesBis extends Component {
             this.setState({customers: this.state.customers.filter(customer => customer.id !== id)});
             try {
                 await deleteCustomer(id)
+                toast.success('Client supprimé !')
             }catch (error) {
                 this.setState({customers: originalCustomers});
+                toast.error("Une erreur est survenue");
             }
         };
 
@@ -113,28 +122,30 @@ class CustomersPagesBis extends Component {
                         value={this.state.search}
                     />
                 </div>
-
-                <table className="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Id.</th>
-                        <th>Client</th>
-                        <th>Email</th>
-                        <th>Entreprise</th>
-                        <th className="text-center">Factures</th>
-                        <th className="text-center">Montant total</th>
-                        <th />
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {this.state.customers.length === 0 && (
+                    <table className="table table-hover">
+                        <thead>
                         <tr>
-                            <td>Récupération des données ...</td>
+                            <th>Id.</th>
+                            <th>Client</th>
+                            <th>Email</th>
+                            <th>Entreprise</th>
+                            <th className="text-center">Factures</th>
+                            <th className="text-center">Montant total</th>
+                            <th />
                         </tr>
-                    )}
-                    {renderTable()}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {renderTable()}
+                        </tbody>
+                    </table>
+
+                {this.state.loading &&
+                <div>
+                    <p className="my-5">Récupération des données</p>
+                    <TableLoader />
+                </div>
+                }
+
                 {filteredCustomers.length > itemsPerPage && (
                     <Pagination
                         currentPage={this.state.currentPage}

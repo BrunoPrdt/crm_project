@@ -2,7 +2,14 @@ import React, {useState} from 'react';
 import Field from "../components/forms/Field";
 import {createUser} from "../services/UserRequestApi";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
+/**
+ *
+ * @param history
+ * @returns {*}
+ * @constructor
+ */
 const RegisterPage = ({history}) => {
 
     const [user, setUser] = useState({
@@ -45,7 +52,7 @@ const RegisterPage = ({history}) => {
         if (user.password === user.passwordConfirm) {
             try {
                 await createUser(user);
-                //TODO : flash notification de succès !
+                toast.success("La création de l'utilisateur a été réalisée avec succès !");
                 setErrors({});
                 setSubmittedError('');
                 setTimeout(function () {
@@ -60,9 +67,11 @@ const RegisterPage = ({history}) => {
                     });
                     setErrors(apiErrors);
                 }
+                toast.error("Erreur(s) dans votre formulaire");
             }
         }else {
-            setSubmittedError('Les mots de passe ne correspondent pas !')
+            setSubmittedError('Les mots de passe ne correspondent pas !');
+            toast.error("Une erreur est survenue");
         }
     };
 

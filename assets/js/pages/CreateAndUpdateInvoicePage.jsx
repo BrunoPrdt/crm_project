@@ -7,7 +7,16 @@ import {Link} from "react-router-dom";
 import {findAllCustomers} from "../services/CustomersRequestAPI";
 import axios from "axios";
 import {SERVER_URL} from "../services/Config";
+import {toast} from "react-toastify";
+import FormContentLoader from "../components/Loaders/FormContentLoader";
 
+/**
+ *
+ * @param history
+ * @param match
+ * @returns {*}
+ * @constructor
+ */
 const CreateAndUpdateInvoicePage = ({history, match}) => {
 
     /**
@@ -30,9 +39,9 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         compagny: "",
     });
     const [customers, setCustomers] = useState([]);
-    const [axiosError, setAxiosError] = useState("");
     const [editing, setEditing] = useState(false);
     const id = match.params.id;
+    const [loading, setLoading] = useState(true);
 
     /**
      *
@@ -42,9 +51,11 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         try {
             const data = await findAllCustomers();
             setCustomers(data);
+            setLoading(false);
         }catch (error) {
             console.log("erreur :", error.response);
-            setAxiosError(error.response);
+            toast.error("Une erreur est survenue, impossible de charger les clients");
+            history.replace('/factures');
         }
     };
 
@@ -56,7 +67,7 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
     }, []);
 
     /**
-     *
+     * Get one invoice by id
      * @param {number} id
      * @returns {Promise<void>}
      */
@@ -70,9 +81,10 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                 .then(response => response.data);
             const {chrono,sentAt, status, amount, customer} = data;
             setInvoice({chrono, sentAt, status, amount, customer: customer.id, compagny: customer.compagny});
+            setLoading(false);
         }catch (error) {
             console.log(error);
-            setAxiosError(error);
+            toast.error("Une erreur est survenue lors de la récupération de la facture demandée");
         }
     };
 
@@ -117,7 +129,7 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         try {
             if (editing) {
                 await updateInvoiceById(id, invoice);
-                //TODO : flash notification de succès !
+                toast.success("La facture a bien été modifiée");
                 setErrors({});
                 setTimeout(function () {
                     history.replace('/factures');
@@ -127,7 +139,7 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                 let date = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
                 setInvoice(invoice.sentAT= date);
                 await createInvoice(invoice);
-                //TODO : flash notification de succès !
+                toast.success('La facture a bien été créé');
                 setErrors({});
                 setTimeout(function () {
                     history.replace('/factures');
@@ -141,9 +153,10 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                     apiErrors[violation.propertyPath] = violation.message;
                 });
                 setErrors(apiErrors);
+                toast.error("Erreur(s) dans votre formulaire");
             }
             console.log(response);
-            setAxiosError(response);
+            toast.error("Une erreur est survenue lors de la création de la facture");
         }
     };
 
@@ -151,14 +164,19 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
         <>
             {!editing ? <h1 className="mb-3">Création d'une facture</h1> :
                 <h1 className="mb-3">Modification d'une facture</h1>}
-            {axiosError && <p className="invalid-feedback">{axiosError}</p>}
             {invoice.length === 0 && (
                 <div className="alert-info">
                     <p>Récupération des données</p>
                 </div>
             )}
+            {loading &&
+                <div>
+                    <p>Chargement des données</p>
+                    <FormContentLoader />
+                </div>
+            }
 
-            <form action="" onSubmit={handleSubmit}>
+            {!loading && <form action="" onSubmit={handleSubmit}>
                 <Field name="amount"
                        label="Montant"
                        type="number"
@@ -215,7 +233,7 @@ const CreateAndUpdateInvoicePage = ({history, match}) => {
                     <button type="submit" className="btn btn-success">Valider</button>
                     <Link to="/factures" className="btn btn-link">Retour à la liste</Link>
                 </div>
-            </form>
+            </form>}
         </>
     );
 };
