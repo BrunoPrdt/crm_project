@@ -27,7 +27,8 @@ const HomePage = (props) => {
                     <p>Vous pouvez créer une facture ou un nouveau clients, visualiser les existants.</p>
                 </> :
                 <>
-                    <p>Créez votre compte et authentifiez-vous. Vous pourrez ensuite créer vos clients, éditer leur factures...</p>
+                    <h5>Créez votre compte et authentifiez-vous. Vous pourrez ensuite créer vos clients, éditer leur factures...</h5>
+                    <p>Un compte de test se trouve à votre disposition, cliquez directement sur connexion.</p>
                     <p className="lead">
                         <NavLink className="btn btn-primary btn-lg" to="/register" role="button">Créer mon compte</NavLink>
                     </p>

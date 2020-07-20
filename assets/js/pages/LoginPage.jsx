@@ -13,8 +13,8 @@ import {toast} from "react-toastify";
  */
 const LoginPage = (props) => {
     const [credentials, setCredentials] = useState({
-        username: "",
-        password: ""
+        username: "test@test.fr",
+        password: "password"
     });
     const [loginError, setLoginError] = useState("");
     const userContextValue = useContext(UserContext);
