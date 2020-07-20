@@ -12,13 +12,13 @@ const HomePage = (props) => {
 
     return (
         <div className="jumbotron">
-            <h1 className="display-3">Bienvenue {props.auth ? userData.userData.firstName : "sur QuickFactures"} !</h1>
+            <h1 className="display-3 mb-5">{props.auth ? "Bienvenue" : "Bienvenue sur QuickFactures"} !</h1>
             {props.auth ?
                 <>
-                    <p className="lead">Que souhaitez-vous faire ?</p>
+                    <h2>Que souhaitez-vous faire ?</h2>
                 </> :
                 <>
-                    <p className="lead">C'est une simple application de gestion de vos factures.</p>
+                    <h2>C'est une simple application de gestion de vos factures.</h2>
                 </>
             }
             <hr className="my-4" />
