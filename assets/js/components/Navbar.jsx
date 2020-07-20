@@ -6,6 +6,7 @@ import { Logout } from "../pages/LogoutPage";
 import {withRouter} from "react-router";
 import { NavLink } from "react-router-dom";
 import {toast} from "react-toastify";
+import {invalidateCache} from "../services/cache";
 
 /**
  *
@@ -23,7 +24,25 @@ const Navbar = (props) => {
      */
     const app_logout = async () =>{
         setTimeout(function () {
-            setLogoutInfos('Déconnexion en cours');
+            setLogoutInfos('Déconnexion en cours, vidage du cache');
+            try {
+                invalidateCache("invoices");
+                toast.success("cache factures supprimé");
+            }catch (e) {
+                toast.info("cache factures vide");
+            }
+            try {
+                invalidateCache("customers");
+                toast.success("cache clients supprimé")
+            }catch (e) {
+                toast.info("cache client vide");
+            }
+            try {
+                invalidateCache("users");
+                toast.success("cache utilisateur supprimé")
+            }catch (e) {
+                toast.info("cache utilisateur vide")
+            }
         }, 500);
         try {
             await Logout();

@@ -23,3 +23,7 @@ export function getCache(key) {
         resolve(CACHE[key] && (CACHE[key].cachedAt + (15*60*1000) ) > new Date().getTime() ? CACHE[key].data : null)
     });
 }
+
+export function invalidateCache(key) {
+    delete CACHE[key];
+}
