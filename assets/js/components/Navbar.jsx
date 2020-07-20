@@ -55,7 +55,7 @@ const Navbar = (props) => {
             }, 1000);
         }catch(e){
             console.log('Un problème est survenu : ', e);
-            props.history.push('/');
+            props.history.replace('/');
         }
     };
 

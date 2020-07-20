@@ -134,9 +134,9 @@ class CustomersPagesBis extends Component {
                             <th />
                         </tr>
                         </thead>
-                        <tbody>
+                        {!this.state.loading && <tbody>
                             {renderTable()}
-                        </tbody>
+                        </tbody>}
                     </table>
 
                 {this.state.loading &&
